@@ -1,9 +1,23 @@
 import { useState } from "react";
- 
+
 const DAYS = ["日","月","火","水","木","金","土"];
 const MONTHS_LABEL = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
 const CATEGORIES = ["すべて","ゲーム・レク","クイズ","体操・運動","手遊び","ホワイトボード","歌・音楽","季節・行事","口腔機能","個別対応"];
- 
+
+
+// ── 体操動画データ ──
+const TAISO_VIDEOS = [
+  // ごぼう先生
+  {id:"t1",channel:"ごぼう先生",title:"集団イス体操①",youtubeId:"7hft9YGyJyg",time:"約10分",desc:"座ったままできるイス体操。ごぼう先生と一緒に楽しく体を動かしましょう！"},
+  {id:"t2",channel:"ごぼう先生",title:"集団イス体操②",youtubeId:"Qf2HdpjRBvQ",time:"約10分",desc:"座ったままできるイス体操その２。正しくより楽しくをモットーに！"},
+  {id:"t3",channel:"ごぼう先生",title:"集団イス体操③",youtubeId:"n_2r0OBqJEY",time:"約10分",desc:"座ったままできるイス体操その３。できない方がいい！笑いながら体操しましょう。"},
+  // 青空体育
+  {id:"t4",channel:"青空体育",title:"歌脳トレ体操（春の歌）",youtubeId:"iuvSWR90-Js",time:"約40分",desc:"花・朧月夜・春よ来い・春が来た・故郷の歌に合わせた体操。作業療法士が監修。"},
+  {id:"t5",channel:"青空体育",title:"歌脳トレ体操（童謡）",youtubeId:"dALNYqZpWbw",time:"約40分",desc:"どんぐりころころ・うさぎとかめ・かたつむりに合わせた楽しい歌体操。"},
+  // ふくくる
+  {id:"t6",channel:"ふくくる",title:"グーパー体操（脳トレ）",youtubeId:"1xrbOejaMrs",time:"約5分",desc:"新井先生のじゃんけん体操。脳トレ・認知症予防・介護予防におすすめ。"},
+];
+
 // ── 歌データ（YouTube ID・歌詞・ジャンル） ──
 const SONGS = [
   // 童謡・唱歌
@@ -11,12 +25,12 @@ const SONGS = [
 こぶな　釣りし　かの川
 夢は　今もめぐりて
 忘れがたき　ふるさと
- 
+
 いかにいます　父母
 つつがなしや　友がき
 雨に風につけても
 思いいずる　ふるさと
- 
+
 こころざしを　はたして
 いつの日にか　帰らん
 山は青き　ふるさと
@@ -25,7 +39,7 @@ const SONGS = [
 岸のすみれや　れんげの花に
 すがたやさしく　色うつくしく
 咲いているねと　ささやきながら
- 
+
 春の小川は　さらさら行くよ
 えびやめだかや　こぶなの群れに
 今日も一日　ひなたで泳いで
@@ -34,7 +48,7 @@ const SONGS = [
 濃いも薄いも　数ある中に
 松をいろどる　楓や蔦は
 山のふもとの　裾模様
- 
+
 渓の流れに　散り浮くもみじ
 波に揺られて　離れて寄って
 赤や黄色の　色さまざまに
@@ -43,7 +57,7 @@ const SONGS = [
 降っては降っては　ずんずん積もる
 山も野原も　綿帽子かぶり
 枯れ木残らず　花が咲く
- 
+
 雪やこんこ　霰やこんこ
 降っても降っても　まだ降りやまぬ
 犬は喜び　庭駆け回り
@@ -52,7 +66,7 @@ const SONGS = [
 やよいの空は　見わたす限り
 霞か雲か　匂いぞ出ずる
 いざや　いざや　見に行かん
- 
+
 さくら　さくら
 野山も里も　見わたす限り
 霞か雲か　朝日に匂う
@@ -61,7 +75,7 @@ const SONGS = [
 たきびだ　たきびだ　おちばたき
 「あたろうか」「あたろうよ」
 きたかぜぴいぷう　ふいている
- 
+
 さざんか　さざんか　さいたみち
 たきびだ　たきびだ　おちばたき
 「あたろうか」「あたろうよ」
@@ -69,11 +83,11 @@ const SONGS = [
   {id:"s7",genre:"童謡・唱歌",title:"花（すべての人の心に花を）",youtubeId:"fRSRgUCMHHk",months:[],lyrics:`泣きなさい　笑いなさい
 いつの日か　いつの日か
 花を咲かそうよ
- 
+
 泣きなさい　笑いなさい
 いつの日か　いつの日か
 花を咲かそうよ
- 
+
 人生の　並木道
 ながながと　続くとも
 夢を忘れず　歩き続ければ
@@ -84,25 +98,25 @@ const SONGS = [
 ああ　わが父母　いかにおわす`},
   {id:"s23",genre:"童謡・唱歌",title:"赤とんぼ",youtubeId:"oyVYNaRDFk8",months:[9,10],lyrics:`夕焼け小焼けの　赤とんぼ
 負われて見たのは　いつの日か
- 
+
 山の畑の　桑の実を
 小籠に摘んだは　まぼろしか
- 
+
 十五で姉やは　嫁に行き
 お里のたよりも　絶えはてた
- 
+
 夕焼け小焼けの　赤とんぼ
 とまっているよ　竿の先`},
   {id:"s24",genre:"童謡・唱歌",title:"七つの子",youtubeId:"PI7GCpABMGA",months:[],lyrics:`烏　なぜ鳴くの
 烏は山に
 かわいい七つの
 子があるからよ
- 
+
 かわいかわいと
 烏は鳴くの
 かわいかわいと
 鳴くんだよ
- 
+
 山の古巣に
 帰って見れば
 かわいい七つの
@@ -111,7 +125,7 @@ const SONGS = [
 見わたす山の端　霞ふかし
 春風そよふく　空を見れば
 夕月かかりて　匂い淡し
- 
+
 里わの火影も　森の色も
 田中の小路を　たどる人も
 蛙のなくねも　鐘の音も
@@ -120,7 +134,7 @@ const SONGS = [
 昔のことぞ　しのばるる
 風の音よ　雲のさまよ
 寄する波も　かえる波も
- 
+
 ゆうべ浜辺を　もとおれば
 昔の人ぞ　しのばるる
 寄する波よ　かえる波よ
@@ -129,7 +143,7 @@ const SONGS = [
 飛び散る火の花　はしる湯玉
 ふいごの風さえ　息をもつがず
 仕事に精出す　村の鍛冶屋
- 
+
 ワッショイ　ワッショイ　ワッショイ
 槌と響け　歌声高く
 ワッショイ　ワッショイ　ワッショイ
@@ -138,7 +152,7 @@ const SONGS = [
 野にも山にも　若葉が茂る
 あれに見えるは　茶摘みじゃないか
 あかねだすきに　菅の笠
- 
+
 日和つづきの　今日このごろを
 心のどかに　摘みつつ歌う
 摘めよ摘め摘め　摘まねばならぬ
@@ -149,7 +163,7 @@ const SONGS = [
 りんりんりんりん　りいんりん
 秋の夜長を　鳴き通す
 ああおもしろい　虫のこえ
- 
+
 くつわ虫また　ガチャガチャと
 きりきりきりきり　きりぎりす
 ずいずいずいずい　ずいむし
@@ -160,7 +174,7 @@ const SONGS = [
 山のお寺の　鐘が鳴る
 お手々つないで　みな帰ろ
 烏と一緒に　帰りましょ
- 
+
 子供が帰った　後からは
 丸い大きな　お月様
 小鳥が夢を　見る頃は
@@ -169,7 +183,7 @@ const SONGS = [
 さわぐいそべの　松原に
 煙たなびく　とまやこそ
 わが懐かしき　住家なれ
- 
+
 生まれてしおに　ゆあみして
 波を子守の　歌と聞き
 千里浜辺を　走り回り
@@ -178,7 +192,7 @@ const SONGS = [
 お池にはまって　さあ大変
 どじょうが出てきて　今日は
 坊ちゃん一緒に　遊びましょ
- 
+
 どんぐりころころ　よろこんで
 しばらく一緒に　遊んだが
 やっぱりお山が　恋しいと
@@ -188,7 +202,7 @@ const SONGS = [
 この子は坊やを　ねんねしな
 夕べさみしい　村はずれ
 叱られて　叱られて
- 
+
 叱られて　叱られて
 あの子と二人で　泣いたっけ
 手をつなぎながら　かえる道
@@ -198,7 +212,7 @@ const SONGS = [
 流れ寄る　椰子の実一つ
 故郷の岸を　離れて
 汝はそも　波に幾月
- 
+
 旧の木は　生いや茂れる
 枝はなお　影をやなせる
 われもまた　渚を枕
@@ -207,34 +221,34 @@ const SONGS = [
 春の遊びの　楽しさ語る
 囲炉裏火は　とろとろ
 外は吹雪
- 
+
 囲炉裏火は　とろとろ
 外は吹雪
- 
+
 父は話す　御国のことを
 子供心にも　嬉し聞きぬ
 囲炉裏火は　とろとろ
 外は吹雪`},
- 
+
   // 昭和歌謡
   {id:"s9",genre:"昭和歌謡",title:"青い山脈",youtubeId:"dv3sEHOJgAQ",months:[],lyrics:`若く　明るい　歌声に
 雪崩は消える　花も咲く
 青い山脈　雪割桜
 空のはて　あこがれの旅へ
- 
+
 青い山脈　花咲く峰の
 いのち　一つに　息づいてゆく`},
   {id:"s10",genre:"昭和歌謡",title:"リンゴの唄",youtubeId:"zRo_XGBIJHE",months:[],lyrics:`赤いリンゴに　口びるよせて
 だまって見ている　青い空
 リンゴはなんにも　いわないけれど
 リンゴの気持は　よくわかる
- 
+
 リンゴ可愛や　可愛やリンゴ`},
   {id:"s11",genre:"昭和歌謡",title:"東京ブギウギ",youtubeId:"iNVBLmPCdnc",months:[],lyrics:`東京ブギウギ　リズムうきうき
 心ずきずき　わくわく
 東京ブギウギ　恋のメロディ
 心ずきずき　わくわく
- 
+
 忘れちゃいやよ　東京ブギウギ
 それはよかった　よかったわいな`},
   {id:"s12",genre:"昭和歌謡",title:"高校三年生",youtubeId:"C24dNUQXTaA",months:[],lyrics:`制服の　胸のボタンを
@@ -247,13 +261,13 @@ const SONGS = [
 思い出しておくれ　俺たちのことを
 飲んで　騒いで　丘に登れば
 はるかに国後が　霞んで見える
- 
+
 旅の情けか　酔うほどに
 君のことを　想い出す`},
   {id:"s14",genre:"昭和歌謡",title:"上を向いて歩こう",youtubeId:"lS_JTqiCQJw",months:[],lyrics:`上を向いて歩こう
 涙がこぼれないように
 泣きながら歩く　一人ぼっちの夜
- 
+
 上を向いて歩こう
 にじんだ星をかぞえて
 思い出す　春の日
@@ -262,13 +276,13 @@ const SONGS = [
 花の山形　紅葉の天童
 なせば成るなる　花笠踊り
 ヤッショ　マカショ
- 
+
 めでた　めでたの　若松様よ
 枝も栄える　葉も繁る`},
   {id:"s36",genre:"昭和歌謡",title:"南国土佐を後にして",youtubeId:"6DSQT8XqBPw",months:[],lyrics:`土佐の高知の　はりまや橋で
 坊さんかんざし　買うを見た
 よさこいよさこい
- 
+
 坊さんかんざし　買うを見た
 見よや土佐路の　春の空
 桂浜辺に　打ち寄せる
@@ -276,16 +290,16 @@ const SONGS = [
   {id:"s37",genre:"昭和歌謡",title:"北国の春",youtubeId:"3nRa6RqITqw",months:[3,4],lyrics:`白樺　青空　南風
 こぶし咲く　あの丘　北国の
 ああ　北国の春
- 
+
 季節が都会ではわからないだろと
 届いた　便りに　書いてあった
- 
+
 あの人は　今ごろ　どうしてるかな`},
   {id:"s38",genre:"昭和歌謡",title:"川の流れのように",youtubeId:"i0vMqB3TIAU",months:[],lyrics:`知らず知らず歩いてきた
 細く長いこの道
 振り返れば遥か遠く
 故郷が見える
- 
+
 ああ　川の流れのように
 ゆるやかに
 いくつも時代は過ぎて
@@ -296,7 +310,7 @@ const SONGS = [
 だから歩いて行くんだね
 一日一歩　三日で三歩
 三歩進んで　二歩さがる
- 
+
 人生はワンツーパンチ
 汗かきベソかき　歩こうよ
 あなたのつけた　足跡にゃ
@@ -305,7 +319,7 @@ const SONGS = [
 仕方がないんだ　君のため
 別れに星影の　ワルツを歌おう
 二人で歌った　あの歌を
- 
+
 泣かないでほしい　泣かないで
 涙が胸に染みてくる
 さよならさよならと　繰り返すうちに
@@ -314,7 +328,7 @@ const SONGS = [
 京都先斗町に　降る雪も
 雪に変わりは　ないじゃなし
 溶けて流れりゃ　みな同じ
- 
+
 花を持ちたや　手に持ちたや
 花の都の　真ん中で
 咲いた笑顔の　その中に
@@ -322,7 +336,7 @@ const SONGS = [
   {id:"s42",genre:"昭和歌謡",title:"東京音頭",youtubeId:"fvbXLJECaAY",months:[8],lyrics:`ハァ踊り踊るなら　チョイト
 東京音頭　ヨイヨイ
 花の都の　真ん中で　アー　ソレ
- 
+
 ヨイヨイヨイヨイ　踊り踊れば
 夏の夜風に　チョイト
 服もほころびよ　ヨイヨイ`},
@@ -330,12 +344,12 @@ const SONGS = [
 賭けた命を　笑わば笑え
 明日は東京に出るからは
 なにがなんでも　勝たねばならぬ
- 
+
 おれの命は　天下の棋士よ
 風が吹いても　雨が降っても`},
   {id:"s44",genre:"昭和歌謡",title:"矢切の渡し",youtubeId:"OyVWLguROhc",months:[],lyrics:`つれて逃げてよ　ついておいでよ
 夕ぐれの雨が降る　矢切の渡し
- 
+
 チャラチャラ流れる　江戸川べりに
 野菊の墓を　見ていたら
 帰れなくなった　この私を
@@ -345,21 +359,21 @@ const SONGS = [
 季節はずれの雪が降ってる
 東京で見る雪は　これが最後ねと
 君がつぶやく
- 
+
 なごり雪も降るときを知り
 ふざけすぎた季節の　あとで`},
   {id:"s46",genre:"昭和歌謡",title:"悲しい酒",youtubeId:"kXjSZSsHVSs",months:[],lyrics:`一人酒場で　飲む酒は
 別れ涙の　味がする
 飲んで棄てたい　面影が
 飲めば浮かんで　くるものを
- 
+
 ああ　ままよ　三味線弾けよ
 どうせ私は　なきがらよ`},
   {id:"s47",genre:"昭和歌謡",title:"岸壁の母",youtubeId:"pxJCXuFPFRU",months:[],lyrics:`母は来ました　今日も来た
 この岸壁に　今日も来た
 とどかぬ想いと　知りながら
 もしかしたらと　また来た
- 
+
 石にしがみつき　泣きました
 あの子の名前を　呼びました`},
   {id:"s48",genre:"昭和歌謡",title:"高原列車は行く",youtubeId:"5xJNk0MHVCU",months:[5,6],lyrics:`汽車の窓から　ハンカチ振れば
@@ -371,12 +385,12 @@ const SONGS = [
 真っ赤なバラが
 淋しかった僕の庭に
 バラが咲いた
- 
+
 こんなに心がなぐさめられるとは
 思ってもみなかった
 バラが咲いた　バラが咲いた
 真っ赤なバラが`},
- 
+
   // 民謡
   {id:"s16",genre:"民謡",title:"炭坑節",youtubeId:"iUMmPZ1seBM",months:[8],lyrics:`月が出た出た　月が出た
 ヨイヨイ
@@ -395,13 +409,13 @@ const SONGS = [
 私ゃ立つ鳥　波に聞け
 ヤサ　エンヤーサーノ
 どっこいしょ`},
- 
+
   // 季節の歌
   {id:"s19",genre:"季節の歌",title:"われは海の子",youtubeId:"Vt-jVVK4GxQ",months:[7,8],lyrics:`われは海の子　白波の
 さわぐいそべの　松原に
 煙たなびく　とまやこそ
 わが懐かしき　住家なれ
- 
+
 生まれてしおに　ゆあみして
 波を子守の　歌と聞き
 千里浜辺を　走り回り
@@ -410,7 +424,7 @@ const SONGS = [
 のきばに　ゆれる
 お星さま　きらきら
 きんぎん　砂子
- 
+
 五しきの短冊　わたしが書いた
 お星さま　きらきら
 空から　見てる`},
@@ -422,16 +436,16 @@ const SONGS = [
 舟に白し　朝の霜
 ただ水鳥の　声はして
 いまだ覚めず　岸の家
- 
+
 烏啼きて　木に高く
 人は畑に　麦を踏む
 げに小春日の　のどけしや
 かえり咲きの　花も見ゆ`},
 ];
- 
+
 const SONG_GENRES = ["すべて","童謡・唱歌","昭和歌謡","民謡","季節の歌"];
 const SONG_MONTHS_FILTER = ["すべて","1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
- 
+
 // ── レクネタデータ ──
 const NETA_DATA = [
   {id:101,orig:true,title:"新聞丸めてドン！",category:"ゲーム・レク",time:15,level:"かんたん",months:[],desc:"新聞紙で作った箱に、丸めた新聞紙ボールをより多く入れたチームの勝ち！\n\n【準備】新聞紙・段ボール箱\n【効果】上肢機能・競争心・盛り上がり\n【声かけ例】「どんどん丸めて投げちゃってください！」"},
@@ -462,16 +476,16 @@ const NETA_DATA = [
   {id:11,orig:false,title:"七夕かざり作り",category:"季節・行事",time:25,level:"ふつう",months:[7],desc:"短冊に願い事を書いて笹に飾る。昔の七夕の思い出話をしながら進める。"},
   {id:12,orig:false,title:"回想法（思い出トーク）",category:"個別対応",time:20,level:"かんたん",months:[],desc:"テーマに沿って昔の思い出を語ってもらう。\n\n【テーマ例】学生時代・子育て・好きだった食べ物"},
 ];
- 
+
 const CAT_COLORS={"ゲーム・レク":"#c8962d","クイズ":"#3a86c8","体操・運動":"#e07b39","手遊び":"#c84e8a","ホワイトボード":"#2d8a6e","歌・音楽":"#8a5db5","季節・行事":"#5dab3a","口腔機能":"#d94f70","個別対応":"#7a7a7a"};
 const LEVEL_COLORS={"かんたん":"#4caf50","ふつう":"#ff9800","じっくり":"#f44336"};
 const GENRE_COLORS={"童謡・唱歌":"#5dab3a","昭和歌謡":"#c8962d","民謡":"#3a86c8","季節の歌":"#8a5db5"};
- 
+
 const S={
   btn:(c,o)=>({padding:"8px 16px",borderRadius:20,border:o?`2px solid ${c}`:"none",background:o?"transparent":c,color:o?c:"#fff",fontSize:13,fontWeight:700,cursor:"pointer"}),
   badge:(c)=>({background:c+"22",color:c,fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:10,border:`1px solid ${c}44`,display:"inline-block"}),
 };
- 
+
 export default function App() {
   const [tab,setTab]=useState("home");
   const [neta,setNeta]=useState(NETA_DATA);
@@ -495,19 +509,19 @@ export default function App() {
   const [songMonth,setSongMonth]=useState("すべて");
   const [selectedSong,setSelectedSong]=useState(null);
   const [showLyrics,setShowLyrics]=useState(false);
- 
+
   const now=new Date();
   const todayInfo={m:now.getMonth()+1,d:now.getDate(),w:DAYS[now.getDay()],label:`${now.getMonth()+1}月${now.getDate()}日（${DAYS[now.getDay()]}）`};
   const tom=new Date(); tom.setDate(tom.getDate()+1);
   const tomInfo={m:tom.getMonth()+1,d:tom.getDate(),label:`${tom.getMonth()+1}月${tom.getDate()}日（${DAYS[tom.getDay()]}）`};
   const curMonth=now.getMonth()+1;
- 
+
   const toggleFav=(id)=>setFavs(f=>f.includes(id)?f.filter(x=>x!==id):[...f,id]);
   const addSess=(id)=>{if(!session.includes(id))setSession(s=>[...s,id]);};
   const remSess=(id)=>setSession(s=>s.filter(x=>x!==id));
   const moveSess=(i,dir)=>{const a=[...session];const j=i+dir;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];setSession(a);};
   const openDetail=(id)=>{setDetail(id);setHist(h=>[{id,date:todayInfo.label},...h.filter(x=>x.id!==id)].slice(0,30));};
- 
+
   const fetchNH=async()=>{
     setNhLoading(true);setNannohi({today:null,tomorrow:null});
     const p=`今日は${todayInfo.m}月${todayInfo.d}日、明日は${tomInfo.m}月${tomInfo.d}日です。デイサービスの朝のレクや会話のきっかけとして高齢者にわかりやすく教えてください。JSON形式のみで返してください（コードブロック不要）:{"today":{"date":"${todayInfo.m}月${todayInfo.d}日","items":[{"name":"記念日名","emoji":"絵文字1つ","desc":"2〜3文。昭和の思い出や季節感と絡めると◎"},{"name":"記念日名2","emoji":"絵文字","desc":"解説"}],"kaiwa":"スタッフが利用者さんに話しかける会話のきっかけフレーズ"},"tomorrow":{"date":"${tomInfo.m}月${tomInfo.d}日","items":[{"name":"記念日名","emoji":"絵文字","desc":"解説"}],"kaiwa":"明日の話題のきっかけフレーズ"}}`;
@@ -521,7 +535,7 @@ export default function App() {
     }catch{setNannohi({today:{date:todayInfo.label,items:[{name:"エラー",emoji:"⚠️",desc:"もう一度お試しください。"}],kaiwa:""},tomorrow:null});}
     setNhLoading(false);
   };
- 
+
   const handleAI=async()=>{
     setAiLoading(true);setAiResult(null);
     const list=neta.filter(n=>n.months.length===0||n.months.includes(curMonth)).map(n=>`・${n.title}（${n.category}、${n.time}分、${n.level}）`).join("\n");
@@ -533,30 +547,30 @@ export default function App() {
     }catch{setAiResult("エラーが発生しました。もう一度お試しください。");}
     setAiLoading(false);
   };
- 
+
   const saveNew=()=>{
     if(!newN.title.trim())return;
     setNeta(n=>[...n,{...newN,id:Date.now(),orig:false}]);
     setNewN({title:"",category:"ゲーム・レク",time:15,level:"ふつう",months:[],desc:""});
     setShowAdd(false);
   };
- 
+
   const filteredNeta=neta.filter(n=>filterCat==="すべて"||n.category===filterCat);
   const presList=session.map(id=>neta.find(n=>n.id===id)).filter(Boolean);
   const detailN=neta.find(n=>n.id===detail);
- 
+
   const filteredSongs=SONGS.filter(s=>{
     if(songGenre!=="すべて"&&s.genre!==songGenre)return false;
     if(songMonth!=="すべて"){const mi=SONG_MONTHS_FILTER.indexOf(songMonth);if(s.months.length>0&&!s.months.includes(mi))return false;}
     return true;
   });
- 
+
   const inp={width:"100%",border:"1.5px solid #ccc",borderRadius:9,padding:"9px 12px",fontSize:14,background:"#fff",fontFamily:"inherit",boxSizing:"border-box"};
   const sT={fontSize:15,fontWeight:900,color:"#2d5a3d",marginBottom:10};
   const fBar={display:"flex",gap:7,overflowX:"auto",paddingBottom:8,marginBottom:12};
   const fBtn=(a)=>({padding:"6px 13px",borderRadius:20,border:a?"2px solid #2d5a3d":"2px solid #ddd",background:a?"#2d5a3d":"#fff",color:a?"#fff":"#555",fontSize:11,fontWeight:a?700:400,cursor:"pointer",whiteSpace:"nowrap"});
   const empty={textAlign:"center",color:"#bbb",fontSize:13,padding:"36px 0"};
- 
+
   // ── PRESENT MODE ──
   if(presenting&&presList.length>0){
     const item=presList[presIdx];
@@ -580,7 +594,7 @@ export default function App() {
       </div>
     );
   }
- 
+
   // ── 歌詞モーダル ──
   const LyricsModal=()=>{
     if(!selectedSong)return null;
@@ -596,7 +610,7 @@ export default function App() {
               <button onClick={()=>setShowLyrics(true)} style={{...S.btn(!showLyrics?"#fff":"rgba(255,255,255,0.3)",!showLyrics),fontSize:12,padding:"5px 14px",color:!showLyrics?"#2d5a3d":"#fff"}}>📝 歌詞</button>
             </div>
           </div>
- 
+
           <div style={{padding:"16px 18px"}}>
             {!showLyrics ? (
               // YouTube リンクボタン
@@ -604,16 +618,16 @@ export default function App() {
                 <div style={{background:"#f8f8f8",borderRadius:14,padding:"28px 20px",textAlign:"center",marginBottom:14,border:"2px dashed #ddd"}}>
                   <div style={{fontSize:48,marginBottom:12}}>🎵</div>
                   <div style={{fontSize:18,fontWeight:900,color:"#222",marginBottom:6}}>{selectedSong.title}</div>
-                  <div style={{fontSize:13,color:"#888",marginBottom:20}}>タップするとYouTubeで再生します</div>
+                  <div style={{fontSize:13,color:"#888",marginBottom:20}}>下のボタンをタップしてYouTubeで再生してください</div>
                   <a
-                    href={`https://www.youtube.com/watch?v=${selectedSong.youtubeId}`}
+                    href={`https://youtu.be/${selectedSong.youtubeId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{display:"block",background:"#ff0000",color:"#fff",borderRadius:20,padding:"14px 20px",fontSize:16,fontWeight:900,textDecoration:"none",textAlign:"center",marginBottom:10}}
+                    style={{display:"block",background:"#ff0000",color:"#fff",borderRadius:20,padding:"14px 20px",fontSize:18,fontWeight:900,textDecoration:"none",textAlign:"center",marginBottom:10}}
                   >
                     ▶ YouTubeで再生する
                   </a>
-                  <div style={{fontSize:11,color:"#aaa"}}>※ブラウザまたはYouTubeアプリが開きます</div>
+                  <div style={{fontSize:11,color:"#aaa"}}>※開かない場合はYouTubeで曲名を検索してください</div>
                 </div>
                 <button onClick={()=>setShowLyrics(true)} style={{...S.btn("#8a5db5"),width:"100%",padding:"12px",fontSize:14}}>📝 歌詞を表示する</button>
               </div>
@@ -624,7 +638,7 @@ export default function App() {
                   <div style={{fontSize:20,lineHeight:2.4,color:"#222",whiteSpace:"pre-wrap",fontWeight:500,letterSpacing:"0.05em"}}>{selectedSong.lyrics}</div>
                 </div>
                 <a
-                  href={`https://www.youtube.com/watch?v=${selectedSong.youtubeId}`}
+                  href={`https://youtu.be/${selectedSong.youtubeId}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{display:"block",background:"#ff0000",color:"#fff",borderRadius:20,padding:"12px 20px",fontSize:14,fontWeight:900,textDecoration:"none",textAlign:"center",marginBottom:10}}
@@ -639,7 +653,7 @@ export default function App() {
       </div>
     );
   };
- 
+
   // ── カード ──
   const Card=({n})=>(
     <div style={{background:"#fff",borderRadius:14,marginBottom:10,boxShadow:n.orig?"0 2px 10px rgba(200,150,45,0.2)":"0 1px 5px rgba(0,0,0,0.07)",overflow:"hidden",border:n.orig?"2px solid #c8962d":"2px solid transparent"}}>
@@ -669,7 +683,7 @@ export default function App() {
       </div>
     </div>
   );
- 
+
   // ── DetailModal ──
   const DetailModal=()=>{
     if(!detailN)return null;
@@ -698,7 +712,7 @@ export default function App() {
       </div>
     );
   };
- 
+
   const AddModal=()=>(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:200,display:"flex",alignItems:"flex-end"}} onClick={()=>setShowAdd(false)}>
       <div style={{background:"#fff",width:"100%",maxHeight:"90vh",borderRadius:"20px 20px 0 0",overflowY:"auto",padding:20}} onClick={e=>e.stopPropagation()}>
@@ -717,7 +731,7 @@ export default function App() {
       </div>
     </div>
   );
- 
+
   // ── PAGES ──
   const Home=()=>(
     <div style={{padding:"14px 14px 0"}}>
@@ -756,7 +770,7 @@ export default function App() {
       }
     </div>
   );
- 
+
   const SongsPage=()=>(
     <div style={{padding:"14px 14px 0"}}>
       <div style={sT}>🎵 懐メロ・唱歌（{filteredSongs.length}曲）</div>
@@ -780,7 +794,7 @@ export default function App() {
       }
     </div>
   );
- 
+
   const NannohiPage=()=>{
     const data=nhTab==="today"?nannohi.today:nannohi.tomorrow;
     return(
@@ -822,7 +836,7 @@ export default function App() {
       </div>
     );
   };
- 
+
   const NetaList=()=>(
     <div style={{padding:"14px 14px 0"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
@@ -833,7 +847,7 @@ export default function App() {
       {filteredNeta.length===0?<div style={empty}>ネタが見つかりません</div>:filteredNeta.map(n=><Card key={n.id} n={n}/>)}
     </div>
   );
- 
+
   const SessionPage=()=>(
     <div style={{padding:"14px 14px 0"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
@@ -863,15 +877,177 @@ export default function App() {
       {session.length>0&&<button onClick={()=>setSession([])} style={{...S.btn("#ccc",true),marginTop:6,width:"100%"}}>セッションをクリア</button>}
     </div>
   );
- 
+
+
+
+  const TaisoPage=()=>{
+    const [selectedTaiso,setSelectedTaiso]=useState(null);
+    return(
+      <div style={{padding:"14px 14px 0"}}>
+        <div style={sT}>🏃 体操動画</div>
+        <div style={{background:"#e8f5ec",border:"1.5px solid #a8d4b5",borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:12,color:"#2d5a3d",lineHeight:1.8}}>
+          💪 座ったままできる体操動画です。<br/>タブレットでそのままYouTubeを開いて使えます！
+        </div>
+
+        {/* ごぼう先生 */}
+        <div style={{fontSize:13,fontWeight:900,color:"#e07b39",marginBottom:8,marginTop:4}}>🥕 ごぼう先生のイス体操</div>
+        {TAISO_VIDEOS.filter(v=>v.channel==="ごぼう先生").map(v=>(
+          <div key={v.id} style={{background:"#fff",borderRadius:14,marginBottom:10,boxShadow:"0 1px 5px rgba(0,0,0,0.07)",overflow:"hidden"}}>
+            <div style={{background:"linear-gradient(135deg,#e07b39,#f4a460)",padding:"8px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <span style={{fontSize:12,color:"#fff",fontWeight:700}}>{v.channel}</span>
+              <span style={{fontSize:11,color:"rgba(255,255,255,0.9)"}}>{v.time}</span>
+            </div>
+            <div style={{padding:"12px 14px"}}>
+              <div style={{fontSize:16,fontWeight:700,color:"#222",marginBottom:6}}>🏃 {v.title}</div>
+              <div style={{fontSize:12,color:"#666",marginBottom:10,lineHeight:1.7}}>{v.desc}</div>
+              <a href={`https://youtu.be/${v.youtubeId}`} target="_blank" rel="noopener noreferrer"
+                style={{display:"block",background:"#ff0000",color:"#fff",borderRadius:10,padding:"11px 16px",textDecoration:"none",fontWeight:700,fontSize:14,textAlign:"center"}}>
+                ▶ YouTubeで再生する
+              </a>
+            </div>
+          </div>
+        ))}
+
+        {/* プレイリスト丸ごとボタン */}
+        <div style={{background:"#fff3e0",border:"2px solid #e07b39",borderRadius:14,padding:"14px 16px",marginBottom:16}}>
+          <div style={{fontSize:13,fontWeight:900,color:"#e07b39",marginBottom:6}}>📋 ごぼう先生のプレイリスト（全動画）</div>
+          <div style={{fontSize:12,color:"#666",marginBottom:10}}>全シリーズをまとめて見られます</div>
+          <a href="https://www.youtube.com/playlist?list=PL1m_GYYsK-f7CQICiwL4SMYBa8-PmuR9O" target="_blank" rel="noopener noreferrer"
+            style={{display:"block",background:"#e07b39",color:"#fff",borderRadius:10,padding:"12px 16px",textDecoration:"none",fontWeight:700,fontSize:14,textAlign:"center"}}>
+            ▶ プレイリスト全体を開く
+          </a>
+        </div>
+
+        {/* 青空体育 */}
+        <div style={{fontSize:13,fontWeight:900,color:"#2d5a3d",marginBottom:8,marginTop:4}}>🌤 青空体育の歌体操</div>
+        {TAISO_VIDEOS.filter(v=>v.channel==="青空体育").map(v=>(
+          <div key={v.id} style={{background:"#fff",borderRadius:14,marginBottom:10,boxShadow:"0 1px 5px rgba(0,0,0,0.07)",overflow:"hidden"}}>
+            <div style={{background:"linear-gradient(135deg,#2d5a3d,#4a8c5c)",padding:"8px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <span style={{fontSize:12,color:"#fff",fontWeight:700}}>{v.channel}</span>
+              <span style={{fontSize:11,color:"rgba(255,255,255,0.9)"}}>{v.time}</span>
+            </div>
+            <div style={{padding:"12px 14px"}}>
+              <div style={{fontSize:16,fontWeight:700,color:"#222",marginBottom:6}}>🎵 {v.title}</div>
+              <div style={{fontSize:12,color:"#666",marginBottom:10,lineHeight:1.7}}>{v.desc}</div>
+              <a href={`https://youtu.be/${v.youtubeId}`} target="_blank" rel="noopener noreferrer"
+                style={{display:"block",background:"#ff0000",color:"#fff",borderRadius:10,padding:"11px 16px",textDecoration:"none",fontWeight:700,fontSize:14,textAlign:"center"}}>
+                ▶ YouTubeで再生する
+              </a>
+            </div>
+          </div>
+        ))}
+
+        {/* ふくくる */}
+        <div style={{fontSize:13,fontWeight:900,color:"#3a86c8",marginBottom:8,marginTop:4}}>🧠 ふくくるの脳トレ体操</div>
+        {TAISO_VIDEOS.filter(v=>v.channel==="ふくくる").map(v=>(
+          <div key={v.id} style={{background:"#fff",borderRadius:14,marginBottom:10,boxShadow:"0 1px 5px rgba(0,0,0,0.07)",overflow:"hidden"}}>
+            <div style={{background:"linear-gradient(135deg,#3a86c8,#5ba3e0)",padding:"8px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <span style={{fontSize:12,color:"#fff",fontWeight:700}}>{v.channel}</span>
+              <span style={{fontSize:11,color:"rgba(255,255,255,0.9)"}}>{v.time}</span>
+            </div>
+            <div style={{padding:"12px 14px"}}>
+              <div style={{fontSize:16,fontWeight:700,color:"#222",marginBottom:6}}>🤜 {v.title}</div>
+              <div style={{fontSize:12,color:"#666",marginBottom:10,lineHeight:1.7}}>{v.desc}</div>
+              <a href={`https://youtu.be/${v.youtubeId}`} target="_blank" rel="noopener noreferrer"
+                style={{display:"block",background:"#ff0000",color:"#fff",borderRadius:10,padding:"11px 16px",textDecoration:"none",fontWeight:700,fontSize:14,textAlign:"center"}}>
+                ▶ YouTubeで再生する
+              </a>
+            </div>
+          </div>
+        ))}
+        <div style={{height:16}}/>
+      </div>
+    );
+  };
+
+  const LinksPage=()=>(
+    <div style={{padding:"14px 14px 0"}}>
+      <div style={sT}>🌐 素材・参考サイト</div>
+      <div style={{fontSize:12,color:"#888",marginBottom:14,lineHeight:1.7}}>
+        タップするとサイトが開きます。塗り絵・脳活プリント・レクネタなどを無料でダウンロードできます。
+      </div>
+
+      {/* 介護レク広場 */}
+      <div style={{background:"#fff",borderRadius:14,marginBottom:12,boxShadow:"0 1px 6px rgba(0,0,0,0.08)",overflow:"hidden"}}>
+        <div style={{background:"linear-gradient(135deg,#e07b39,#f4a460)",padding:"10px 16px"}}>
+          <div style={{fontSize:15,fontWeight:900,color:"#fff"}}>📥 介護レク広場</div>
+          <div style={{fontSize:11,color:"rgba(255,255,255,0.9)"}}>レク素材・レクネタの無料ダウンロードサイト</div>
+        </div>
+        <div style={{padding:"14px 16px"}}>
+          <div style={{fontSize:13,color:"#444",marginBottom:12,lineHeight:1.8}}>
+            塗り絵・脳活プリント・クロスワード・習字・工作など豊富な素材が揃っています。
+            会員登録（無料）でダウンロードできます。
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            <a href="https://www.kaigo-rec.com/" target="_blank" rel="noopener noreferrer"
+              style={{display:"block",background:"#e07b39",color:"#fff",borderRadius:10,padding:"12px 16px",textDecoration:"none",fontWeight:700,fontSize:14,textAlign:"center"}}>
+              🏠 トップページを開く
+            </a>
+            <a href="https://www.kaigo-rec.com/TRecreationMaterials/search?m_recreation_material_category_id%5B%5D=1&m_recreation_material_category_id%5B%5D=2&submit=%E6%A4%9C%E7%B4%A2" target="_blank" rel="noopener noreferrer"
+              style={{display:"block",background:"#fff",color:"#e07b39",border:"2px solid #e07b39",borderRadius:10,padding:"10px 16px",textDecoration:"none",fontWeight:700,fontSize:13,textAlign:"center"}}>
+              🎨 塗り絵一覧を開く
+            </a>
+            <a href="https://www.kaigo-rec.com/TRecreationMaterials/search?m_recreation_material_category_id%5B%5D=11&m_recreation_material_category_id%5B%5D=12&m_recreation_material_category_id%5B%5D=13&m_recreation_material_category_id%5B%5D=14&submit=%E6%A4%9C%E7%B4%A2" target="_blank" rel="noopener noreferrer"
+              style={{display:"block",background:"#fff",color:"#3a86c8",border:"2px solid #3a86c8",borderRadius:10,padding:"10px 16px",textDecoration:"none",fontWeight:700,fontSize:13,textAlign:"center"}}>
+              🧠 脳活・クイズ一覧を開く
+            </a>
+            <a href="https://www.kaigo-rec.com/TRecreationInformations/search" target="_blank" rel="noopener noreferrer"
+              style={{display:"block",background:"#fff",color:"#5dab3a",border:"2px solid #5dab3a",borderRadius:10,padding:"10px 16px",textDecoration:"none",fontWeight:700,fontSize:13,textAlign:"center"}}>
+              📋 レクネタ一覧を開く
+            </a>
+            <a href="https://www.kaigo-rec.com/MSpecials/movie" target="_blank" rel="noopener noreferrer"
+              style={{display:"block",background:"#fff",color:"#c84e8a",border:"2px solid #c84e8a",borderRadius:10,padding:"10px 16px",textDecoration:"none",fontWeight:700,fontSize:13,textAlign:"center"}}>
+              🎬 レク動画一覧を開く
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* みんなの介護 */}
+      <div style={{background:"#fff",borderRadius:14,marginBottom:12,boxShadow:"0 1px 6px rgba(0,0,0,0.08)",overflow:"hidden"}}>
+        <div style={{background:"linear-gradient(135deg,#3a86c8,#5ba3e0)",padding:"10px 16px"}}>
+          <div style={{fontSize:15,fontWeight:900,color:"#fff"}}>📖 みんなの介護</div>
+          <div style={{fontSize:11,color:"rgba(255,255,255,0.9)"}}>介護レクのヒント・アイデア情報サイト</div>
+        </div>
+        <div style={{padding:"14px 16px"}}>
+          <div style={{fontSize:13,color:"#444",marginBottom:12,lineHeight:1.8}}>
+            レクリエーションのアイデアや進め方のヒントが豊富です。
+            登録不要で閲覧できます。
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            <a href="https://www.my-kaigo.com/pub/" target="_blank" rel="noopener noreferrer"
+              style={{display:"block",background:"#3a86c8",color:"#fff",borderRadius:10,padding:"12px 16px",textDecoration:"none",fontWeight:700,fontSize:14,textAlign:"center"}}>
+              🏠 トップページを開く
+            </a>
+            <a href="https://www.my-kaigo.com/pub/search/recreation/" target="_blank" rel="noopener noreferrer"
+              style={{display:"block",background:"#fff",color:"#3a86c8",border:"2px solid #3a86c8",borderRadius:10,padding:"10px 16px",textDecoration:"none",fontWeight:700,fontSize:13,textAlign:"center"}}>
+              🎯 レクリエーション記事を開く
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* 注意書き */}
+      <div style={{background:"#fffbe6",border:"1.5px solid #f4c430",borderRadius:12,padding:"12px 14px",marginBottom:20}}>
+        <div style={{fontSize:12,color:"#7a6000",lineHeight:1.8}}>
+          💡 <b>ご注意</b><br/>
+          介護レク広場の素材ダウンロードには無料の会員登録が必要です。<br/>
+          各サイトの利用規約に従ってご使用ください。
+        </div>
+      </div>
+    </div>
+  );
+
   const TABS=[
     {id:"home",icon:"🏠",label:"ホーム"},
     {id:"songs",icon:"🎵",label:"懐メロ"},
     {id:"nannohi",icon:"📅",label:"何の日"},
     {id:"neta",icon:"📚",label:"ネタ一覧"},
     {id:"session",icon:"📋",label:"セッション"},
+    {id:"taiso",icon:"🏃",label:"体操動画"},
+    {id:"links",icon:"🌐",label:"素材サイト"},
   ];
- 
+
   return(
     <div style={{minHeight:"100vh",background:"#f5f0e8",fontFamily:"'Noto Sans JP','Hiragino Sans',sans-serif",paddingBottom:78}}>
       <div style={{background:"#2d5a3d",padding:"12px 18px 10px",position:"sticky",top:0,zIndex:100,boxShadow:"0 2px 8px rgba(0,0,0,0.2)"}}>
@@ -879,13 +1055,15 @@ export default function App() {
         <div style={{fontSize:19,fontWeight:900,color:"#fff",letterSpacing:1}}>🌿 レクリエーション手帳</div>
         <div style={{fontSize:11,color:"#c8e6d0",marginTop:2}}>{todayInfo.label}</div>
       </div>
- 
+
       {tab==="home"&&<Home/>}
       {tab==="songs"&&<SongsPage/>}
       {tab==="nannohi"&&<NannohiPage/>}
       {tab==="neta"&&<NetaList/>}
       {tab==="session"&&<SessionPage/>}
- 
+      {tab==="taiso"&&<TaisoPage/>}
+      {tab==="links"&&<LinksPage/>}
+
       <div style={{position:"fixed",bottom:0,left:0,right:0,background:"#fff",borderTop:"1px solid #e0e0e0",display:"flex",zIndex:100,boxShadow:"0 -2px 6px rgba(0,0,0,0.07)"}}>
         {TABS.map(t=>(
           <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"9px 2px 7px",border:"none",background:tab===t.id?"#e8f5ec":"#fff",color:tab===t.id?"#2d5a3d":"#999",fontSize:9,fontWeight:tab===t.id?700:400,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
@@ -893,11 +1071,11 @@ export default function App() {
           </button>
         ))}
       </div>
- 
+
       {detail&&<DetailModal/>}
       {showAdd&&<AddModal/>}
       {selectedSong&&<LyricsModal/>}
     </div>
   );
 }
- 
+
