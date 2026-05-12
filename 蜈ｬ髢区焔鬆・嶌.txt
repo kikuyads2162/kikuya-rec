@@ -1,0 +1,73 @@
+# きくやレクリエーション手帳　公開手順書
+
+## 必要なもの
+- パソコン（WindowsでもMacでもOK）
+- メールアドレス（GitHubとVercelのアカウント作成に使います）
+- 所要時間：約20〜30分
+
+---
+
+## STEP 1：GitHubアカウントを作る
+
+1. https://github.com をパソコンで開く
+2. 「Sign up」をクリック
+3. メールアドレス・パスワード・ユーザー名を入力して登録
+4. メールの認証リンクをクリックして完了
+
+---
+
+## STEP 2：GitHubにファイルをアップロードする
+
+1. GitHubにログインした状態で右上の「＋」→「New repository」をクリック
+2. Repository name に「kikuya-rec」と入力
+3. 「Public」を選択
+4. 「Create repository」をクリック
+
+5. 次の画面で「uploading an existing file」をクリック
+6. このフォルダ（kikuya-rec）の中身を**すべて選択してドラッグ＆ドロップ**
+   ※フォルダごとではなく、中のファイル・フォルダをすべて選んでください
+7. 「Commit changes」をクリック
+
+---
+
+## STEP 3：Vercelアカウントを作る
+
+1. https://vercel.com をパソコンで開く
+2. 「Sign Up」をクリック
+3. 「Continue with GitHub」を選んでGitHubアカウントと連携
+4. 認証を許可する
+
+---
+
+## STEP 4：Vercelにデプロイ（公開）する
+
+1. Vercelにログイン後、「Add New Project」をクリック
+2. 「Import Git Repository」で「kikuya-rec」を選択
+3. 「Import」をクリック
+4. そのまま「Deploy」をクリック（設定は変更不要）
+5. 数分待つと「Congratulations!」と表示される
+6. 表示されたURL（例：https://kikuya-rec.vercel.app）が完成！
+
+---
+
+## STEP 5：スタッフに共有する
+
+1. 発行されたURLをコピー
+2. 施設のグループLINEやメールで全員に送る
+3. タブレット・スマホのブラウザで開いてもらう
+
+### ホーム画面に追加してもらう方法（iPad）
+1. Safariでアプリを開く
+2. 画面下の「共有ボタン（□↑）」をタップ
+3. 「ホーム画面に追加」→「追加」
+
+---
+
+## 困ったときは
+
+わからないことがあればClaude.aiに質問してください。
+手順をステップごとに教えてもらえます。
+
+---
+
+作成：ホームケアセンターきくや デイサービス
